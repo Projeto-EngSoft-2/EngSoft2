@@ -1,6 +1,7 @@
 import React from "react";
 import HomePage from "./components/HomePage/HomePage.jsx";
-import LoginPage from "./components/RegisterPage/RegisterPage.jsx"
+import RegisterPage from "./components/RegisterPage/RegisterPage.jsx"
+import LoginPage from "./components/LoginPage/LoginPage.jsx"
 import "./App.css";
 
 
