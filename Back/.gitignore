@@ -1,24 +1,38 @@
-# compiled output
-/dist
-/node_modules
-/build
+# Dependências
+node_modules/
+
+# Arquivos de ambiente
+.env
+
+# Arquivos de configuração sensíveis
+src/config/*
+!src/config/.gitkeep
 
 # Logs
 logs
 *.log
 npm-debug.log*
-pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
 
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Arquivos de build
+dist/
+build/
 
 # Tests
 /coverage
 /.nyc_output
 
-
-.env
 .env.development.local
 .env.test.local
 .env.production.local
