@@ -9,47 +9,29 @@ const storage = new Storage({
 
 const bucketName = process.env.GOOGLE_CLOUD_BUCKET_NAME;
 
-if (!bucketName) {
-  throw new Error('GOOGLE_CLOUD_BUCKET_NAME não está definido no arquivo .env');
-}
-
-const bucket = storage.bucket(bucketName);
-
 const uploadImage = async (file) => {
   try {
     if (!file) {
       throw new Error('Nenhum arquivo foi enviado');
     }
 
-    // Gerar nome único para o arquivo usando timestamp
     const timestamp = Date.now();
     const fileName = `${timestamp}-${file.originalname}`;
-
-    const blob = bucket.file(fileName);
-    const blobStream = blob.createWriteStream({
-      resumable: false,
+    const fileUpload = storage.bucket(bucketName).file(fileName);
+    
+    // Upload do arquivo sem configuração de ACL
+    await fileUpload.save(file.buffer, {
       metadata: {
         contentType: file.mimetype
       }
     });
 
-    return new Promise((resolve, reject) => {
-      blobStream.on('error', (error) => {
-        reject(error);
-      });
+    // Gera URL pública usando o padrão do Google Cloud Storage
+    const publicUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
+    return publicUrl;
 
-      blobStream.on('finish', async () => {
-        // Tornar o arquivo público
-        await blob.makePublic();
-        
-        // Gerar URL pública
-        const publicUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
-        resolve(publicUrl);
-      });
-
-      blobStream.end(file.buffer);
-    });
   } catch (error) {
+    console.error('Erro no upload:', error);
     throw new Error(`Erro ao fazer upload da imagem: ${error.message}`);
   }
 };

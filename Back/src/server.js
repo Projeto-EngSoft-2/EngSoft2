@@ -16,7 +16,8 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
   app.use('/logar', require('./routes/auth'));
   app.use('/create', require('./routes/user'));
-  app.use('/reports', require('./routes/reports'));
+  app.use('/reports', require('./routes/report'));
+  app.use('/admin', require('./routes/admin'));
   
 
   if (process.env.NODE_ENV !== 'test') {

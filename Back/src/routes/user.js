@@ -1,6 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const Usuario = require('../models/User');
+const authenticateToken = require('../middlewares/authenticateToken');
+const Report = require('../models/Report');
 
 const router = express.Router();
 
@@ -32,6 +34,35 @@ router.post('/user', async (req, res) => {
   } catch (erro) {
     console.error(erro);
     res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+});
+
+// Nova rota para deletar próprio usuário
+router.delete('/delete', authenticateToken, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+
+    // Encontra e deleta o usuário
+    const usuario = await Usuario.findOneAndDelete({ email: userEmail });
+
+    if (!usuario) {
+      return res.status(404).json({ 
+        mensagem: 'Usuário não encontrado.' 
+      });
+    }
+
+    // Deleta todos os reports associados ao usuário
+    await Report.deleteMany({ userId: userEmail });
+
+    res.json({ 
+      mensagem: 'Usuário e seus reports deletados com sucesso.' 
+    });
+
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ 
+      mensagem: 'Erro ao deletar usuário.' 
+    });
   }
 });
 
