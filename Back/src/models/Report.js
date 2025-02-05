@@ -3,13 +3,7 @@ const mongoose = require('mongoose');
 const reportSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  location: {
-    address: { type: String, required: true },
-    coordinates: {
-      lat: { type: Number, required: true },
-      lng: { type: Number, required: true }
-    }
-  },
+  location: { type: String, required: true },
   imageUrl: { type: String, required: true },
   category: {
     type: String,
@@ -21,10 +15,13 @@ const reportSchema = new mongoose.Schema({
     enum: ['avaliação', 'aberto', 'solucionado', 'recusado', 'concluído', 'urgente'],
     default: 'avaliação'
   },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+  userId: { type: String, required: true },
+  
+  reportId: {
+    type: String,
+    unique: true,
+    required: true,
+    default: () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
   }
 }, {
   timestamps: true
